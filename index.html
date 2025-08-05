@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoBot - Energy Optimization Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__content">
+            <div class="header__branding">
+                <i class="fas fa-leaf header__icon"></i>
+                <h1 class="header__title">EcoBot - Energy Optimization Assistant</h1>
+            </div>
+            <div class="header__ibm">
+                <span class="ibm-badge">Powered by IBM</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <h3>Quick Actions</h3>
+            </div>
+            <div class="sidebar__actions">
+                <button class="action-btn" data-action="energy-audit">
+                    <i class="fas fa-search"></i>
+                    Energy Audit Tips
+                </button>
+                <button class="action-btn" data-action="appliances">
+                    <i class="fas fa-home"></i>
+                    Appliance Recommendations
+                </button>
+                <button class="action-btn" data-action="renewable">
+                    <i class="fas fa-solar-panel"></i>
+                    Renewable Energy Options
+                </button>
+                <button class="action-btn" data-action="smart-home">
+                    <i class="fas fa-wifi"></i>
+                    Smart Home Setup
+                </button>
+                <button class="action-btn" data-action="calculator">
+                    <i class="fas fa-calculator"></i>
+                    Cost Calculator
+                </button>
+            </div>
+            
+            <!-- Energy Tips Carousel -->
+            <div class="tips-carousel">
+                <h4>💡 Energy Tips</h4>
+                <div class="tip-container">
+                    <div class="tip-item active" data-tip="0">
+                        <p><strong>Lighting:</strong> Switch to LED bulbs - they use 75% less energy!</p>
+                        <span class="savings">Save up to $75/year</span>
+                    </div>
+                    <div class="tip-item" data-tip="1">
+                        <p><strong>HVAC:</strong> Set thermostat to 68°F winter, 78°F summer</p>
+                        <span class="savings">Save up to 10% on costs</span>
+                    </div>
+                    <div class="tip-item" data-tip="2">
+                        <p><strong>Appliances:</strong> Choose ENERGY STAR certified appliances</p>
+                        <span class="savings">Save up to $300/year</span>
+                    </div>
+                    <div class="tip-item" data-tip="3">
+                        <p><strong>Water:</strong> Install low-flow showerheads and faucets</p>
+                        <span class="savings">Save up to $70/year</span>
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="prevTip"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-btn" id="nextTip"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat Interface -->
+        <main class="chat-container">
+            <div class="chat-header">
+                <div class="bot-info">
+                    <div class="bot-avatar">🤖</div>
+                    <div class="bot-details">
+                        <h3>EcoBot Assistant</h3>
+                        <span class="status online">Online</span>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn" id="exportChat" title="Export Chat">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="chat-action-btn" id="clearChat" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Hello! 👋 I'm EcoBot, your energy optimization assistant. I can help you:</p>
+                        <ul>
+                            <li>🏠 Conduct home energy audits</li>
+                            <li>⭐ Recommend energy-efficient appliances</li>
+                            <li>🌱 Explore renewable energy options</li>
+                            <li>💡 Set up smart home automation</li>
+                            <li>💰 Calculate energy savings and costs</li>
+                        </ul>
+                        <p>What would you like to know about optimizing your energy consumption?</p>
+                    </div>
+                    <div class="message-time">Now</div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator hidden" id="typingIndicator">
+                <div class="message-avatar">🤖</div>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <form class="chat-input-form" id="chatForm">
+                <div class="chat-input-container">
+                    <input type="text" 
+                           id="messageInput" 
+                           class="chat-input" 
+                           placeholder="Ask me about energy optimization..."
+                           autocomplete="off">
+                    <button type="submit" class="send-btn" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- Energy Calculator Modal -->
+    <div class="modal hidden" id="calculatorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Energy Savings Calculator</h3>
+                <button class="modal-close" id="closeCalculator">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="calculator-form">
+                    <div class="form-group">
+                        <label class="form-label">Current Monthly Electric Bill ($)</label>
+                        <input type="number" id="currentBill" class="form-control" placeholder="e.g., 150">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Home Type</label>
+                        <select id="homeType" class="form-control">
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                            <option value="large_house">Large House</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Improvement Type</label>
+                        <select id="improvementType" class="form-control">
+                            <option value="led_lighting">LED Lighting Upgrade</option>
+                            <option value="smart_thermostat">Smart Thermostat</option>
+                            <option value="energy_star_appliances">ENERGY STAR Appliances</option>
+                            <option value="solar_panels">Solar Panels</option>
+                            <option value="comprehensive">Comprehensive Upgrade</option>
+                        </select>
+                    </div>
+                    <button class="btn btn--primary" id="calculateSavings">Calculate Savings</button>
+                </div>
+                <div class="calculator-results hidden" id="calculatorResults">
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <span class="result-label">Estimated Annual Savings</span>
+                            <span class="result-value" id="annualSavings">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Monthly Savings</span>
+                            <span class="result-value" id="monthlySavings">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Investment Payback</span>
+                            <span class="result-value" id="paybackPeriod">0 years</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">CO₂ Reduction</span>
+                            <span class="result-value" id="co2Reduction">0 lbs/year</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__content">
+            <p class="footer__disclaimer">
+                <i class="fas fa-info-circle"></i>
+                This is a prototype demonstration. Energy savings estimates are approximate and may vary based on individual circumstances.
+            </p>
+            <div class="footer__links">
+                <span>Built with IBM Cloud</span>
+                <span>•</span>
+                <span>Watson Assistant Ready</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
